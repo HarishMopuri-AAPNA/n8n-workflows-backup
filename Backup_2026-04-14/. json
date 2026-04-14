@@ -1,0 +1,47 @@
+{
+  "content": {
+    "name": "Production - Resume Parsing - Step 1.1.2 - Missing Job Description (JD) details to the candidate.. json",
+    "path": "Backup_2026-04-14/Production - Resume Parsing - Step 1.1.2 - Missing Job Description (JD) details to the candidate.. json",
+    "sha": "80b197a422edef864c7274dbe4bfc95ca5384e22",
+    "size": 22619,
+    "url": "https://api.github.com/repos/HarishMopuri-AAPNA/n8n-workflows-backup/contents/Backup_2026-04-14/Production%20-%20Resume%20Parsing%20-%20Step%201.1.2%20-%20Missing%20Job%20Description%20(JD)%20details%20to%20the%20candidate..%20json?ref=main",
+    "html_url": "https://github.com/HarishMopuri-AAPNA/n8n-workflows-backup/blob/main/Backup_2026-04-14/Production%20-%20Resume%20Parsing%20-%20Step%201.1.2%20-%20Missing%20Job%20Description%20(JD)%20details%20to%20the%20candidate..%20json",
+    "git_url": "https://api.github.com/repos/HarishMopuri-AAPNA/n8n-workflows-backup/git/blobs/80b197a422edef864c7274dbe4bfc95ca5384e22",
+    "download_url": "https://raw.githubusercontent.com/HarishMopuri-AAPNA/n8n-workflows-backup/main/Backup_2026-04-14/Production%20-%20Resume%20Parsing%20-%20Step%201.1.2%20-%20Missing%20Job%20Description%20(JD)%20details%20to%20the%20candidate..%20json",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/HarishMopuri-AAPNA/n8n-workflows-backup/contents/Backup_2026-04-14/Production%20-%20Resume%20Parsing%20-%20Step%201.1.2%20-%20Missing%20Job%20Description%20(JD)%20details%20to%20the%20candidate..%20json?ref=main",
+      "git": "https://api.github.com/repos/HarishMopuri-AAPNA/n8n-workflows-backup/git/blobs/80b197a422edef864c7274dbe4bfc95ca5384e22",
+      "html": "https://github.com/HarishMopuri-AAPNA/n8n-workflows-backup/blob/main/Backup_2026-04-14/Production%20-%20Resume%20Parsing%20-%20Step%201.1.2%20-%20Missing%20Job%20Description%20(JD)%20details%20to%20the%20candidate..%20json"
+    }
+  },
+  "commit": {
+    "sha": "a02b3c9831fe9b37f5d13a0feb26bef2c436e708",
+    "node_id": "C_kwDOSCUn8doAKGEwMmIzYzk4MzFmZTliMzdmNWQxM2EwZmViMjZiZWYyYzQzNmU3MDg",
+    "url": "https://api.github.com/repos/HarishMopuri-AAPNA/n8n-workflows-backup/git/commits/a02b3c9831fe9b37f5d13a0feb26bef2c436e708",
+    "html_url": "https://github.com/HarishMopuri-AAPNA/n8n-workflows-backup/commit/a02b3c9831fe9b37f5d13a0feb26bef2c436e708",
+    "author": {
+      "name": "HarishMopuri-AAPNA",
+      "email": "hmopuri@aapnainfotech.com",
+      "date": "2026-04-14T13:04:12Z"
+    },
+    "committer": {
+      "name": "HarishMopuri-AAPNA",
+      "email": "hmopuri@aapnainfotech.com",
+      "date": "2026-04-14T13:04:12Z"
+    },
+    "tree": {
+      "sha": "172440bad4fcf0547dd1a58f7e1ade54d54180ad",
+      "url": "https://api.github.com/repos/HarishMopuri-AAPNA/n8n-workflows-backup/git/trees/172440bad4fcf0547dd1a58f7e1ade54d54180ad"
+    },
+    "message": "2026-04-14 18:34 Backup completed",
+    "parents": [],
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  }
+}
