@@ -1,0 +1,302 @@
+{
+  "updatedAt": "2026-04-05T02:04:52.696Z",
+  "createdAt": "2026-03-24T06:34:02.529Z",
+  "id": "0GT0Yh0LXu18j7pK",
+  "name": "Production - Resume Parsing - Step 1.1.2 - Missing Job Description (JD) details to the candidate.",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<!DOCTYPE html>\n<html>\n<head>\n  <title>Complete Your Profile</title>\n  <style>\n    *{box-sizing:border-box}\n    body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:#f9fafb;margin:0;padding:40px;color:#111827}\n    .card{max-width:520px;background:#fff;margin:auto;padding:32px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.06)}\n    h2{margin:0 0 8px;font-size:24px;font-weight:700}\n    h3{margin:0 0 24px;font-size:18px;font-weight:600;color:#6b7280}\n    label{display:block;margin-top:20px;margin-bottom:6px;font-weight:600;font-size:14px}\n    input[type=text],textarea,select{width:100%;padding:12px 14px;border-radius:8px;border:1px solid #d1d5db;font-size:14px;outline:none;background:#f9fafb;font-family:inherit}\n    input[type=text]:focus,textarea:focus,select:focus{border-color:#6366f1;background:#fff;box-shadow:0 0 0 2px rgba(99,102,241,.15)}\n    .upload-box{border:2px dashed #d1d5db;border-radius:8px;padding:28px;text-align:center;margin-top:6px;cursor:pointer;transition:.2s}\n    .upload-box:hover{border-color:#6366f1;background:#f0f0ff}\n    .upload-fname{font-size:13px;color:#6366f1;margin-top:8px;font-weight:600;word-break:break-all}\n    .upload-hint{font-size:13px;color:#6b7280;margin-top:8px}\n    #submitBtn{margin-top:28px;width:100%;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s}\n    #submitBtn:hover{background:#4f46e5}\n    #submitBtn:disabled{background:#9ca3af;cursor:not-allowed}\n    .required{color:#ef4444;font-weight:bold;margin-left:4px}\n    .field-group{margin-bottom:4px}\n    .msg{display:none;margin-top:14px;padding:10px 14px;border-radius:8px;font-size:13px;text-align:center}\n    .msg.err{background:#fee2e2;color:#991b1b}\n    .msg.ok{background:#dcfce7;color:#166534}\n  </style>\n</head>\n<body>\n<div class=\"card\">\n  <h2>Hi {{ $('Select rows - Basis of Token').item.json.Name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ') }}</h2>\n  <h3>Complete Your Profile</h3>\n  <script type=\"application/json\" id=\"n8nToken\">{{ $json.token }}</script>\n  <script type=\"application/json\" id=\"n8nFields\">{{ JSON.stringify($json.fields) }}</script>\n  <div id=\"dynamicFields\"></div>\n  <button type=\"button\" id=\"submitBtn\" onclick=\"submitForm()\">Submit</button>\n  <div class=\"msg\" id=\"statusMsg\"></div>\n</div>\n<script>\n  var TOKEN  = document.getElementById('n8nToken').textContent.trim();\n  var FIELDS = JSON.parse(document.getElementById('n8nFields').textContent);\n  var container = document.getElementById('dynamicFields');\n\n  FIELDS.forEach(function(f) {\n    var wrap = document.createElement('div');\n    wrap.className = 'field-group';\n    var lbl = document.createElement('label');\n    lbl.innerHTML = f.label + ' <span class=\"required\">*</span>';\n    wrap.appendChild(lbl);\n\n    if (f.type === 'dropdown') {\n      var sel = document.createElement('select');\n      sel.id = 'field_' + f.name; sel.name = f.name; sel.required = true;\n      var blank = document.createElement('option');\n      blank.value = ''; blank.textContent = 'Select';\n      sel.appendChild(blank);\n      (f.options || []).forEach(function(opt) {\n        var o = document.createElement('option');\n        o.value = opt; o.textContent = opt;\n        if (f.value === opt) o.selected = true;\n        sel.appendChild(o);\n      });\n      wrap.appendChild(sel);\n\n    } else if (f.type === 'textarea') {\n      var ta = document.createElement('textarea');\n      ta.id = 'field_' + f.name; ta.name = f.name;\n      ta.required = true; ta.rows = 4; ta.value = f.value || '';\n      wrap.appendChild(ta);\n\n    } else if (f.type === 'file') {\n      var box = document.createElement('div');\n      box.className = 'upload-box';\n      box.innerHTML =\n        '<svg width=\"36\" height=\"36\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"2\" viewBox=\"0 0 24 24\">' +\n          '<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>' +\n          '<polyline points=\"17 8 12 3 7 8\"/>' +\n          '<line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/>' +\n        '</svg>' +\n        '<p class=\"upload-hint\">Click to browse file (.pdf, .doc, .docx)</p>' +\n        '<div class=\"upload-fname\" id=\"fname_' + f.name + '\">No file chosen</div>';\n      var fi = document.createElement('input');\n      fi.type = 'file'; fi.id = 'field_' + f.name; fi.name = f.name;\n      fi.accept = '.pdf,.doc,.docx'; fi.required = true; fi.style.display = 'none';\n      fi.addEventListener('change', (function(name) {\n        return function() {\n          var el = document.getElementById('fname_' + name);\n          var inp = document.getElementById('field_' + name);\n          el.textContent = (inp.files && inp.files[0]) ? inp.files[0].name : 'No file chosen';\n        };\n      })(f.name));\n      box.appendChild(fi);\n      box.addEventListener('click', (function(name) {\n        return function(e) {\n          var inp = document.getElementById('field_' + name);\n          if (e.target !== inp) inp.click();\n        };\n      })(f.name));\n      wrap.appendChild(box);\n\n    } else {\n      var inp = document.createElement('input');\n      inp.type = 'text'; inp.id = 'field_' + f.name; inp.name = f.name;\n      inp.required = true; inp.value = f.value || '';\n      wrap.appendChild(inp);\n    }\n    container.appendChild(wrap);\n  });\n\n  function submitForm() {\n    var btn = document.getElementById('submitBtn');\n    var msg = document.getElementById('statusMsg');\n    var valid = true;\n    FIELDS.forEach(function(f) {\n      var el = document.getElementById('field_' + f.name);\n      if (!el) return;\n      if (f.type === 'file') { if (!el.files || el.files.length === 0) valid = false; }\n      else { if (!el.value || el.value.trim() === '') valid = false; }\n    });\n    if (!valid) {\n      msg.textContent = 'Please fill in all required fields.';\n      msg.className = 'msg err'; msg.style.display = 'block'; return;\n    }\n    btn.disabled = true; btn.textContent = 'Submitting...'; msg.style.display = 'none';\n\n    // ── Fetch A: text fields → Step 1.1.3 (existing, untouched) ──────────────\n    var textFd = new FormData();\n    textFd.append('token', TOKEN);\n    FIELDS.forEach(function(f) {\n      if (f.type !== 'file') {\n        var el = document.getElementById('field_' + f.name);\n        if (el) textFd.append(f.name, el.value || '');\n      }\n    });\n\n    // ── Fetch B: file only → Step 1.1.3b (new upload workflow) ──────────────\n    var fileField = FIELDS.find(function(f) { return f.type === 'file'; });\n    var fileFd = null;\n    if (fileField) {\n      var fileEl = document.getElementById('field_' + fileField.name);\n      if (fileEl && fileEl.files && fileEl.files[0]) {\n        fileFd = new FormData();\n        fileFd.append('token', TOKEN);\n        fileFd.append('uploadResume', fileEl.files[0]);\n      }\n    }\n\n    var promises = [\n      fetch('/webhook/3295be42-0999-404c-842c-a43f0135d611', { method: 'POST', body: textFd })\n        .then(function(r) { return r.text(); })\n    ];\n    if (fileFd) {\n      promises.push(\n        fetch('/webhook/cv-upload-missing-jd/staging', { method: 'POST', body: fileFd })\n          .then(function(r) { return r.text(); })\n      );\n    }\n\n    Promise.all(promises)\n      .then(function() {\n        // Hide all dynamic fields\n        document.getElementById('dynamicFields').style.display = 'none';\n        // Hide the submit button\n        btn.style.display = 'none';\n        // Hide the h3 subtitle\n        var h3 = document.querySelector('.card h3');\n        if (h3) h3.style.display = 'none';\n        // Show success message\n        msg.textContent = 'Profile updated successfully! Thank you.';\n        msg.className = 'msg ok'; msg.style.display = 'block';\n      })\n      .catch(function() {\n        msg.textContent = 'Submission failed. Please try again.';\n        msg.className = 'msg err'; msg.style.display = 'block';\n        btn.disabled = false; btn.textContent = 'Submit';\n      });\n  }\n</script>\n</body>\n</html>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1184,
+        128
+      ],
+      "id": "8a405524-d229-438e-b92e-a68a12ab3e40",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const token = $json.query.token;\n\n\nreturn [{\n  json: {\n    token\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        224
+      ],
+      "id": "1b3a2945-5403-4c82-9f8d-bc41465e2cf9",
+      "name": "Code - Get Token"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "rpa_cv",
+          "mode": "list",
+          "cachedResultName": "rpa_cv"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "cvMissingToken",
+              "value": "={{ $json.token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        512,
+        224
+      ],
+      "id": "e220bd7a-603c-482e-b300-dfad4bd5b796",
+      "name": "Select rows - Basis of Token",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "aDYVgJucYx7CxDBE",
+          "name": "RecruitmentProcessDB_Production"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawMissingData = $json.missingData;\n\nconst missingData =\n  typeof rawMissingData === \"string\"\n    ? JSON.parse(rawMissingData)\n    : rawMissingData;\n\n// ============================================================\n// OLD Label mapping (commented out for reference)\n// ============================================================\n// const labelMap = {\n//   CurrentLocation: \"What is your current location?\",\n//   EnglishCommunicationRating:\n//     \"How much do you rate your English communication skills out of 5 (5 being the highest)?\",\n//   Top5KeySkills:\n//     \"Mention top 5 key skills you have for this job role?\",\n//   ExpectedCTC_LPA:\n//     \"Expected CTC (In LPA)\",\n// };\n// ============================================================\n\n// Label mapping  (KEY = Field Name, VALUE = Form Question)\n// Source: matched_fields_mapping.xlsx\n// Note: Yellow rows (EducationalScoresPercentage.*) are excluded\nconst labelMap = {\n  Name:                       \"Name\",\n  NoticePeriod:               \"What is your official notice period?\",\n  ContactNumber:              \"What is your Contact Number?\",\n  EmailID:                    \"Email ID\",\n  HighestQualification:       \"What is your highest Qualification?\",\n  TotalExperienceYears:       \"What is your total experience (in Years)?\",\n  LastCompanyExperienceYears: \"What is your experience with your last company (in Years)?\",\n  CurrentLocation:            \"What is your current location?\",\n  CTC_LPA:                    \"What is your CTC (In LPA)?\",\n  ExpectedCTC_LPA:            \"What is your Expected CTC (In LPA)?\",\n  JobSource:                  \"From which source you got to know about this job opportunity?\",\n  RecruiterInfoAAPNA:         \"Share the recruiter's information who contacted you from AAPNA\",\n  PositionApplied:            \"Please mention the position name you are applying for\",\n  Top5KeySkills:              \"Mention top 5 key skills you have for this job role\",\n  CurrentCompany:             \"What is your current company name and website address?\",\n  Gender:                     \"Gender\",\n  EnglishCommunicationRating: \"How much you rate your English communication skills out of 5 (5 being the highest)?\",\n  PreferredShift:             \"Which shift timing is suitable for you?\",\n  ReasonForJobChange:         \"What is your reason for job change?\",\n  WillingToTakeOnlineTest:    \"Our online test is the mandatory part of AAPNA's interview process. Are you willing to take it?\",\n  HasLaptopForInitialDays:    \"Do you have a good working laptop (minimum 8 GB Ram) to start your job for initial 15 days?\",\n  LinkedInProfile:            \"LinkedIn profile link?\",\n  uploadResume:               \"Upload Resume\",\n};\n\n// ============================================================\n// Field type mapping\n// Source: test3.js — input types inferred from form field elements\n//   dropdown  → <select> in test3.js\n//   textarea  → <textarea> in test3.js\n//   text      → <input type=\"text\"> in test3.js (default)\n// ============================================================\nconst typeMap = {\n  // --- Dropdowns (from <select> elements in test3.js) ---\n  EnglishCommunicationRating: \"dropdown\",\n  Gender:                     \"dropdown\",\n  PreferredShift:             \"dropdown\",\n  WillingToTakeOnlineTest:    \"dropdown\",\n  HasLaptopForInitialDays:    \"dropdown\",\n\n  // --- Textareas (from <textarea> elements in test3.js) ---\n  Top5KeySkills:              \"textarea\",\n  ReasonForJobChange:         \"textarea\",\n  CurrentCompany:             \"textarea\",\n\n  // --- File upload ---\n  uploadResume:               \"file\",\n\n  // --- Explicit text fields ---\n  CurrentLocation:            \"text\",\n  ExpectedCTC_LPA:            \"text\",\n  CTC_LPA:                    \"text\",\n  NoticePeriod:               \"text\",\n  TotalExperienceYears:       \"text\",\n  LastCompanyExperienceYears: \"text\",\n  HighestQualification:       \"text\",\n  PositionApplied:            \"text\",\n  JobSource:                  \"text\",\n  RecruiterInfoAAPNA:         \"text\",\n  LinkedInProfile:            \"text\",\n  Name:                       \"text\",\n  EmailID:                    \"text\",\n  ContactNumber:              \"text\",\n};\n\n// ============================================================\n// Dropdown options mapping\n// Source: test3.js — options taken directly from each <select>\n// ============================================================\nconst optionsMap = {\n  EnglishCommunicationRating: [\"1\", \"2\", \"3\", \"4\", \"5\"],\n  Gender:                     [\"Male\", \"Female\", \"Other\"],\n  PreferredShift:             [\"2pm - 11pm/3pm - 12am\", \"4pm - 1am\", \"Others\"],\n  WillingToTakeOnlineTest:    [\"Yes\", \"No\"],\n  HasLaptopForInitialDays:    [\"Yes\", \"No\"],\n};\n\nconst formatLabel = (key) => {\n  return key\n    .replace(/_/g, \" \")\n    .replace(/([a-z])([A-Z])/g, \"$1 $2\")\n    .replace(/\\b\\w/g, (char) => char.toUpperCase());\n};\n\nconst fields = Object.keys(missingData).map((key) => {\n  return {\n    name: key,\n    label: labelMap[key] || formatLabel(key),\n    type: typeMap[key] || \"text\",\n    options: optionsMap[key] || [],\n    value:\n      missingData[key] === \"Null\" || missingData[key] == null\n        ? \"\"\n        : missingData[key],\n  };\n});\n\nreturn [\n  {\n    json: {\n      fields,\n      token: $('Code - Get Token').first().json.token\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        128
+      ],
+      "id": "2ea79a5d-03a5-429d-80e2-cff07faa6ae9",
+      "name": "Code - Create Dynamic Form"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d18905d7-04c0-47a8-94bc-84c6e8e7438d",
+              "leftValue": "={{ Object.keys($json).length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        720,
+        224
+      ],
+      "id": "a2c1c17d-10da-43fe-bc29-867fd4cd4694",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<!DOCTYPE html>\n<html>\n\n<head>\n  <title>Complete Your Profile</title>\n  <style>\n    body {\n      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;\n      background: #f9fafb;\n      margin: 0;\n      padding: 40px;\n      color: #111827;\n    }\n\n    .card {\n      max-width: 520px;\n      background: #ffffff;\n      margin: auto;\n      padding: 32px;\n      border-radius: 12px;\n      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);\n    }\n\n    h2 {\n      margin: 0 0 24px;\n      font-size: 24px;\n      font-weight: 700;\n    }\n\n    label {\n      display: block;\n      margin-top: 20px;\n      margin-bottom: 6px;\n      font-weight: 600;\n      font-size: 14px;\n    }\n\n    input {\n      width: 100%;\n      padding: 12px 14px;\n      border-radius: 8px;\n      border: 1px solid #d1d5db;\n      font-size: 14px;\n      outline: none;\n      background: #f9fafb;\n    }\n\n    input:focus {\n      border-color: #6366f1;\n      background: #ffffff;\n      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);\n    }\n\n    button {\n      margin-top: 28px;\n      width: 100%;\n      padding: 12px;\n      background: #6366f1;\n      color: white;\n      border: none;\n      border-radius: 8px;\n      font-size: 15px;\n      font-weight: 600;\n      cursor: pointer;\n    }\n\n    button:hover {\n      background: #4f46e5;\n    }\n\n  textarea, select {\n    width: 100%;\n    padding: 12px 14px;\n    border-radius: 8px;\n    border: 1px solid #d1d5db;\n    font-size: 14px;\n    outline: none;\n    background: #f9fafb;\n  }\n  \n  textarea:focus, select:focus {\n    border-color: #6366f1;\n    background: #ffffff;\n    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);\n  }\n\n  .required {\n    color: red;\n    font-weight: bold;\n    margin-left: 4px;\n  }\n\n\n  </style>\n</head>\n\n<body>\n\n  <div class=\"card\">\n\n\n <label>We encountered an issue while click your response. Please contact HR through email.</label>\n\n  </div>\n\n</body>\n\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        928,
+        304
+      ],
+      "id": "815de0e4-2960-4ef0-b0c8-9a53f2570787",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        304
+      ],
+      "id": "4673c53a-9ae4-463b-bb56-9b25b67bf37c",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "## Create a dynamic form to display missing Job Description (JD) details to the candidate.",
+        "height": 544,
+        "width": 1648,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "f89ff728-7843-4885-ae48-0271e04d7223",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "path": "98f45723-8ddf-4ea2-88f4-c2653fb5eb12",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        144,
+        224
+      ],
+      "id": "64d7bece-1a7d-4e69-aa57-4781e6cf1758",
+      "name": "Webhook1",
+      "webhookId": "98f45723-8ddf-4ea2-88f4-c2653fb5eb12"
+    }
+  ],
+  "connections": {
+    "Code - Get Token": {
+      "main": [
+        [
+          {
+            "node": "Select rows - Basis of Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows - Basis of Token": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Create Dynamic Form": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code - Create Dynamic Form",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code - Get Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "81edbf83-17bc-4876-842d-3822599b87a1",
+  "activeVersionId": null,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-03-24T06:34:02.532Z",
+      "createdAt": "2026-03-24T06:34:02.532Z",
+      "role": "workflow:owner",
+      "workflowId": "0GT0Yh0LXu18j7pK",
+      "projectId": "HpdwczljVtVjPy2z"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
